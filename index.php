@@ -41,17 +41,18 @@ foreach ($data as $row) {
     <style>
         .chart-container {
             display: flex;
-            justify-content: space-around;
+            flex-direction: column;
             align-items: center;
             padding: 30px;
         }
         .chart-box {
-            width: 40%;
+            width: 80%;
             height: 400px;
             padding: 20px;
             background: #f9f9f9;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -61,7 +62,6 @@ foreach ($data as $row) {
             <h1>🏠 แดชบอร์ดการจัดการเช่า</h1>
             <p>ยินดีต้อนรับสู่ระบบจัดการการเช่าของคุณ</p>
         </header>
-
 
         <nav class="menu">   
             <button onclick="window.location.href='new_expense.php'" class="menu-btn">รายจ่าย</button>
@@ -79,11 +79,11 @@ foreach ($data as $row) {
             </ul>
 
             <br>    
-        <nav class="menu">   
-            <button onclick="window.location.href='manage_items.php'" class="menu-btn">เพิ่มรายการรับ-จ่าย</button>  <br><br>
-            <button onclick="window.location.href='manage_assets.php'" class="menu-btn">เพิ่มสินทรัพย์/โครงการ</button>
-        </nav>
-                           
+            <nav class="menu">   
+                <button onclick="window.location.href='manage_items.php'" class="menu-btn">เพิ่มรายการรับ-จ่าย</button>  <br><br>
+                <button onclick="window.location.href='manage_assets.php'" class="menu-btn">เพิ่มสินทรัพย์/โครงการ</button>
+            </nav>
+                            
             <div class="chart-container">
                 <div class="chart-box">
                     <canvas id="financeChart"></canvas>
@@ -147,7 +147,6 @@ foreach ($data as $row) {
                 }
             });
         </script>
-
 
         <footer>
             <p>&copy; <?php echo date("Y"); ?> ระบบจัดการเช่า</p>
