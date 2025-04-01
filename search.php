@@ -40,11 +40,13 @@ if (!empty($note_item)) {
 $where = count($where_clauses) ? " WHERE " . implode(" AND ", $where_clauses) : "";
 
 // Fetch transactions
-$sql = "SELECT t.*, a.asset_name, i.item_name 
+$sql = "SELECT t.*, a.asset_name, i.item_name , p.pay_name
         FROM transactions t
+        LEFT JOIN pays p ON t.pay_code = p.pay_code
         JOIN assets a ON t.asset_code = a.asset_code
         JOIN items i ON t.item_code = i.item_code" . $where;
 $res = $mysqli->query($sql);
+
 
 if (!$res) {
     die("Error executing query: " . $mysqli->error);
@@ -138,6 +140,7 @@ $assets = $resAssets ? $resAssets->fetch_all(MYSQLI_ASSOC) : [];
                         <th>Asset</th>
                         <th>Type</th>
                         <th>Item</th>
+                        <th>Pay</th>                        
                         <th>Date</th>
                         <th style="text-align: right;">Amount</th>
                         <th>Note</th>
@@ -151,6 +154,7 @@ $assets = $resAssets ? $resAssets->fetch_all(MYSQLI_ASSOC) : [];
                             <td><?php echo htmlspecialchars($row['asset_name']); ?></td>
                             <td><?php echo htmlspecialchars($row['type']); ?></td>
                             <td><?php echo htmlspecialchars($row['item_name']); ?></td>
+                            <td><?php echo htmlspecialchars($row['pay_name']); ?></td>                            
                             <td><?php echo htmlspecialchars($row['transaction_date']); ?></td>
                             <td style="text-align: right;"> <?php echo number_format($row['amount'], 2); ?> </td>
                             <td><?php echo htmlspecialchars($row['note']); ?></td>

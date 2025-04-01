@@ -44,11 +44,33 @@ if ($resItems) {
         $items[] = $item;
     }
 }
+// Fetch Pays (Pay from)
+$pays = [];
+$sqlPays = "SELECT pay_code, pay_name FROM pays";
+$sqlPays = $mysqli->query($sqlPays);
+if ($sqlPays) {
+    while ($pay = $sqlPays->fetch_assoc()) {
+        $pays[] = $pay;
+    }
+}
+
+
+// Fetch Vendor
+$vendors = [];
+$sqlVendors = "SELECT vendor_code, vendor_name FROM vendors";
+$sqlVendors = $mysqli->query($sqlVendors);
+if ($sqlVendors) {
+    while ($vendor = $sqlVendors->fetch_assoc()) {
+        $vendors[] = $vendor;
+    }
+}
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $asset_code = $mysqli->real_escape_string($_POST['asset_code']);
     $item_code = $mysqli->real_escape_string($_POST['item_code']);
+    $pay_code = $mysqli->real_escape_string($_POST['pay_code']);    
+    $vendor_code = $mysqli->real_escape_string($_POST['vendor_code']);     
     $transaction_date = $mysqli->real_escape_string($_POST['transaction_date']);
     $amount = floatval($_POST['amount']);
     $note = $mysqli->real_escape_string($_POST['note']);
@@ -58,6 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                   asset_code = '$asset_code',
                   type = '$type',
                   item_code = '$item_code',
+                  pay_code = '$pay_code',       
+                  vendor_code = '$vendor_code',                              
                   transaction_date = '$transaction_date',
                   amount = $amount,
                   note = '$note'
@@ -149,6 +173,34 @@ $dateFormatted = date("Y-m-d", strtotime($transaction['transaction_date']));
                 </select>
             </div>
 
+            
+            <div class="form-group">
+                <label for="pay_code">Pay:</label>
+                <select name="pay_code" id="pay_code" required>
+                    <option value="">Select a pay (ใครจ่าย)</option>
+                    <?php foreach ($pays as $pay): ?>
+                        <option value="<?php echo $pay['pay_code']; ?>" 
+                            <?php if ($transaction['pay_code'] == $pay['pay_code']) echo "selected"; ?>>
+                            <?php echo $pay['pay_name']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="vendor_code">Vendor:</label>
+                <select name="vendor_code" id="vendor_code" required>
+                    <option value="">Select vendor (จ่ายใคร)</option>
+                    <?php foreach ($vendors as $vendor): ?>
+                        <option value="<?php echo $vendor['vendor_code']; ?>" 
+                            <?php if ($transaction['vendor_code'] == $vendor['vendor_code']) echo "selected"; ?>>
+                            <?php echo $vendor['vendor_name']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            
             <div class="form-group">
                 <label for="transaction_date">Transaction Date:</label>
                 <input type="date" id="transaction_date" name="transaction_date" value="<?php echo $dateFormatted; ?>" required>

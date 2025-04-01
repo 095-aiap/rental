@@ -35,10 +35,34 @@ if ($resItems) {
     }
 }
 
+// Fetch Pays (Pay from)
+$pays = [];
+$sqlPays = "SELECT pay_code, pay_name FROM pays";
+$sqlPays = $mysqli->query($sqlPays);
+if ($sqlPays) {
+    while ($pay = $sqlPays->fetch_assoc()) {
+        $pays[] = $pay;
+    }
+}
+
+
+// Fetch Vendor
+$vendors = [];
+$sqlVendors = "SELECT vendor_code, vendor_name FROM vendors";
+$sqlVendors = $mysqli->query($sqlVendors);
+if ($sqlVendors) {
+    while ($vendor = $sqlVendors->fetch_assoc()) {
+        $vendors[] = $vendor;
+    }
+}
+
+
 // Handle form submission (without refreshing the screen)
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_expense'])) {
     $selected_asset = $mysqli->real_escape_string($_POST['asset_code']);
     $selected_item = $mysqli->real_escape_string($_POST['item_code']);
+    $selected_pay = $mysqli->real_escape_string($_POST['pay_code']);    
+    $selected_vendor = $mysqli->real_escape_string($_POST['vendor_code']);      
     $transaction_date = $mysqli->real_escape_string($_POST['transaction_date']);
     $amount = isset($_POST['amount']) ? floatval($_POST['amount']) : 0;
     $note = $mysqli->real_escape_string($_POST['note']);
@@ -48,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_expense'])) {
     if (empty($selected_asset)) {
         $message = "⚠️ Error: Please select an asset.";
     } else {
-        $sql = "INSERT INTO transactions (asset_code, type, item_code, transaction_date, amount, note, created_time, created_by)
-                VALUES ('$selected_asset', '$type', '$selected_item', '$transaction_date', $amount, '$note', NOW(), '$created_by')";
+        $sql = "INSERT INTO transactions (asset_code, type, item_code, transaction_date, amount, note, pay_code, vendor_code,created_time, created_by)
+                VALUES ('$selected_asset', '$type', '$selected_item', '$transaction_date', $amount, '$note', '$selected_pay','$selected_vendor', NOW(), '$created_by')";
 
         if ($mysqli->query($sql)) {
             $message = "✅ New expense recorded successfully!";
@@ -124,6 +148,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save_expense'])) {
                     <?php foreach ($items as $item): ?>
                         <option value="<?php echo $item['item_code']; ?>">
                             <?php echo $item['item_name']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="pay_code">Pay:</label>
+                <select name="pay_code" id="pay_code" required class="form-input">
+                    <option value="">Select an pay from (จ่ายโดย)</option>
+                    <?php foreach ($pays as $pay): ?>
+                        <option value="<?php echo $pay['pay_code']; ?>">
+                            <?php echo $pay['pay_name']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+
+            
+            <div class="form-group">
+                <label for="vendor_code">Vendor:</label>
+                <select name="vendor_code" id="vendor_code" required class="form-input">
+                    <option value="">Select an Vendor(จ่ายใคร)</option>
+                    <?php foreach ($vendors as $vendor): ?>
+                        <option value="<?php echo $vendor['vendor_code']; ?>">
+                            <?php echo $vendor['vendor_name']; ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
