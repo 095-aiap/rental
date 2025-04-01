@@ -81,6 +81,7 @@ foreach ($data as $row) {
             <br>    
             <nav class="menu">   
                 <button onclick="window.location.href='manage_items.php'" class="menu-btn">เพิ่มรายการรับ-จ่าย</button>  <br><br>
+                <button onclick="window.location.href='manage_pays.php'" class="menu-btn">เพิ่มผู้จ่ายเงิน</button>  <br><br>                
                 <button onclick="window.location.href='manage_assets.php'" class="menu-btn">เพิ่มสินทรัพย์/โครงการ</button>
             </nav>
                             

@@ -44,7 +44,7 @@ $sql = "SELECT t.*, a.asset_name, i.item_name , p.pay_name
         FROM transactions t
         LEFT JOIN pays p ON t.pay_code = p.pay_code
         JOIN assets a ON t.asset_code = a.asset_code
-        JOIN items i ON t.item_code = i.item_code" . $where;
+        JOIN items i ON t.item_code = i.item_code" . $where ." ORDER BY t.created_time DESC";
 $res = $mysqli->query($sql);
 
 
